@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <h1>Vue关注点</h1>
+    <div id="app">
+        {{name}}--{{age}}
+        <button v-on:click="changeAge">修改年龄</button>
+    </div>
+    <script>
+        /*
+            指令：v-on
+        */
+        let user={
+            name :"dingding",
+            age :'33'
+        }
+        new Vue({
+            el:'#app',
+            data:user,
+            //配置方法
+            methods:{
+                changeAge(){
+                    user.age = 18
+                }
+            }
+        })
+    </script>
+</body>
+</html>

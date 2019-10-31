@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <h1>3、数据改变UI的原理</h1>
+    <div id="app">
+        
+    </div>
+    <script>
+        /*
+            指令：v-on
+        */
+        let user={
+            name :"dingding",
+            age :'33'
+        }
+        // let vm= new Vue({
+        //     el:'#app',
+        //     data:user,
+        //     //配置方法
+        //     methods:{
+        //         changeAge(){
+        //             user.age = 18
+        //         }
+        //     }
+        // })
+
+        //不用Vue实现原理  属性特性  get和set方法
+        let data ={
+
+        }       
+        let odiv=document.getElementById("app");
+        odiv.innerText=user.name;
+
+       
+        Object.defineProperty(data,'name',{
+            get(){
+                return user.name
+            },
+            set(val){
+                user.name=val;
+                odiv.innerText=val;
+
+            }
+        })
+
+    </script>
+</body>
+</html>

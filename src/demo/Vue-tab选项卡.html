@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <style>
+            .active{
+                color: red;
+            }
+        </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" > 
+    
+</head>
+<body>
+    <h1>7、tab选项卡</h1>
+    <div id="app">
+        <ul class="nav nav-tabs">
+            <!-- v-for指令是遍历 -->
+            <!-- v-show指令是控制是否显示，其值可以是true和false，也可以像下面代码一样控制显示 -->
+            <!-- v-bind是绑定属性的指令 eg:class、stytle等  可以用三元运算符来控制 eg:idx==activeindex?"active":""-->
+            <li v-for='(item,idx) in namelsit' v-on:click="changeIndex(idx)" v-bind:class='{active:idx==activeindex}'><a>{{item.name}}</a></li>
+        </ul>
+        <div style="padding: 20px;" v-for='(item,idx) in namelsit'  v-show='idx==activeindex'>{{item.hobby}}</div>
+    </div> 
+    <script>
+        let data={
+            activeindex:0,
+            namelsit:[
+                {
+                    name:'laoxie',
+                    hobby:'敲代码'
+                },
+                {
+                    name:'dingding',
+                    hobby:'买书'
+                },{
+                    name:'laoluo',
+                    hobby:'买衣服'
+                }
+            ]
+        }
+
+        let vm = new Vue({
+            el:'#app',//连接View层
+            data,//连接Model层
+            methods:{
+                changeIndex(idx){
+                    this.activeindex=idx;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

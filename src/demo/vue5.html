@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <h1>5、响应式属性</h1>
+    <div id="app">
+        {{score}}
+        <p>{{namelist}}</p>
+        <input type="text" v-model="score.english">
+    </div>
+    <script>
+        let vm=new Vue({
+            el:'#app',
+            data:{
+                score:{
+                    chinese:100,
+                    english:21,
+                    math:231,
+                },
+                namelist:[
+                    'laoxi','dingding','laoluo'
+                ]
+            }
+        })
+        
+    </script>
+</body>
+</html>
