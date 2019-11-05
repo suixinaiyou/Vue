@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <h1>动态组件component</h1>
+    <div id="app">
+        <ul class="nav nav-tabs">
+            <li 
+            v-for='(item,idx) in menu'
+            :class="{active:idx==itemIdx}"
+            @click='change(idx)'
+            >
+                <a href="#">{{item.text}}</a>
+            </li>
+        </ul>
+        
+        <component :is='currentComponent'></component>
+    </div>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                itemIdx:0,
+                currentComponent:'首页',
+                menu: [{
+                    text: '首页',
+                    box: 'Home'
+                },
+                {
+                    text: '列表页',
+                    box: 'list'
+                },
+                {
+                    text: '登录页',
+                    box: 'login'
+                },
+                {
+                    text: '注册页',
+                    box: 'reg'
+                },]
+            },
+            components:{},
+            methods:{
+                change(idx){
+                    this.itemIdx=idx;
+                    this.currentComponent = this.menu[idx].text
+                }
+            },
+            created(){
+                this.menu.forEach(item=>{
+                    // console.log(this);这里的this指向的是Vue实例对象
+                    
+                    this.$options.components[item.text] = {
+                        template:`<div>${item.text}</div>`,
+                        created(){
+                            console.log(item.box+'create')
+                        },
+                        destroyed(){
+                            console.log(item.box+'destroy')
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+
+
+
+</html>

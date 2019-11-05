@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <h1>组件化开发</h1>
+    <div id="app">
+        <todo-form v-on:additem="addItem"></todo-form>
+        <todo-content :datalist="datalist" 
+        :compeleted='compeleted' 
+        :remove='remove'
+        :select='select'></todo-content></todo-content>
+
+    </div>
+    <template id="todoFrom">
+        <div class="input-group">
+            <input type="text" class="form-control" v-model="title" ref="title">
+            <div class="input-group-btn">
+                <button class="btn btn-success" @click="addItem">添加</button>
+            </div>
+        </div>
+    </template>
+    <template id="todoContent">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td><input type="checkbox" v-model='selectall'>全选</td>
+                    <td>#</td>
+                    <td>待办事项</td>
+                    <td>是否完成</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <todo-item></todo-item> //因为w3c的标签原则,所以tbody里的标签只能是tr-->
+                <tr is="todoItem" 
+                v-for="(item,index) in datalist" 
+                :item="item" :index="index" 
+                :compeleted='compeleted'
+                :remove='remove'
+                @click.native="select(index)"
+                ></tr>
+            </tbody>    
+        </table>
+    </template>
+    <template id="todoItem">
+        <tr 
+        :class='{success:item.successed}'>
+            <td><input type="checkbox" v-model='item.successed'></td>
+            <td>{{index+1}}</td>
+            <td>{{item.text}}</td>
+            <td>{{item.done?'是':'否 '}}
+                <div class="btn-group btn-group-sm"></div>
+                <button @click.stop='compeleted(index)'>完成</button></div>
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-danger" @click="remove(index)">删除</button>
+                </div>
+            </td>
+        </tr>
+    </template>
+    <script>
+        //全局组件 ： Vue.component
+        //局部组件 ：components配置参数 
+        //template：模板(相当于实例Vue里的el参数，控制View视图的显示内容)
+        Vue.component('todoForm', {
+            //data必须是一个函数，且返回值必须是一个对象
+            data() {
+                return {
+                    title: '',
+                }
+            },
+            template: `#todoFrom`,
+            methods: {
+                addItem() {
+                    this.$emit('additem',this.title)
+                    this.title = "",
+                    this.$refs.title.focus();
+                }
+            }
+        })
+
+        Vue.component('todoContent', {
+            props: ['datalist', 'compeleted', 'remove','select'],
+            template: `#todoContent`,
+            computed: {
+                /*如果selectall为一个函数，那么此函数为get方法，
+                 想要selectall成为存储器属性，则必须是一个对象*/
+                selectall: {
+                    get() {
+                        return this.datalist.every(item => item.successed)
+                    },
+                    set(val) {
+                        this.datalist.forEach(item => {
+                            return item.successed = val
+
+                        });
+                    }
+
+                }
+            },
+            components: {
+                todoItem: {
+                    props: ['item', 'index', 'compeleted', 'remove'],
+                    template: `#todoItem`,
+                }
+
+            }
+        })
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                //因为是子传父，所以是从里往外传，title要写在item组件的data里
+                datalist: [{
+                    id: Date.now(),
+                    text: "普通家庭马化腾",
+                    done: false,
+                    successed: false,
+                },
+                {
+                    id: Date.now() + 10,
+                    text: "北大还行撒贝宁",
+                    done: false,
+                    successed:false,
+                },
+                ]
+            },
+            methods: {
+                addItem(title) {
+                    let data = {
+                        id: Date.now() + 10,
+                        text:title,
+                        done: false,
+                        successed: false
+                    }
+                    this.datalist.unshift(data);
+                    /*
+                    因为是子传父，是从里往外传，此时的title不在是这里的标签，
+                    所以以下俩个方法不能写在这了，要写在item组件中
+                    */
+                    // this.title = "",
+                    // this.$refs.title.focus();
+                },
+                remove(idx) {
+                    this.datalist.splice(idx, 1)
+                },
+                compeleted(idx) {
+                    this.datalist[idx].done = !this.datalist[idx].done
+                },
+                select(idx) {
+                    this.datalist[idx].successed = !this.datalist[idx].successed;
+
+                },
+
+            },
+           
+        })
+    </script>
+</body>
+
+</html>
